@@ -1,1 +1,1 @@
-echo ${GOOGLE_CREDENTIALS} > /app/google-credentials.json
+echo ${GOOGLE_CREDENTIALS} > /static/google-credentials.json
