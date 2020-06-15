@@ -36,7 +36,8 @@ async def split_send(context, string):
 async def on_ready():
     print(f"\nBot started as: {client.user.name} ({client.user.id}) - Version: {version}")
     await client.change_presence(activity=discord.Game("all these hoes"), status=discord.Status.online)
-    initial_ext = ["cogs.train", "cogs.music_finder", "cogs.imbd", "cogs.translate", "cogs.owner", "cogs.meme"]
+    # initial_ext = ["cogs.train", "cogs.music_finder", "cogs.imbd", "cogs.translate", "cogs.owner", "cogs.meme"]
+    initial_ext = ["cogs."+x for x in os.environ.get("INITIAL_EXT").split(",")]
     for ext in initial_ext:
         try:
             client.load_extension(ext)
