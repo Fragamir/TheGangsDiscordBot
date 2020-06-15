@@ -4,7 +4,6 @@ from google.cloud import translate_v2 as translate
 from google.api_core.exceptions import BadRequest
 import os
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "GangBot-a6cbc56039b4.json"
 translate_client = translate.Client()
 
 
