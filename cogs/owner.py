@@ -1,6 +1,4 @@
 from discord.ext import commands
-from main import output_to_test
-
 
 class OwnerCog(commands.Cog):
     def __init__(self, client):
@@ -10,12 +8,12 @@ class OwnerCog(commands.Cog):
     async def admin(self, context):
         print(f"{context.message.author.name} ({context.message.author.id}) Invoked a cog command")
 
-    @admin.command("reload")
+    @admin.command("reload", pass_context=True)
     async def reload(self, cog):
         if cog[:5] != "cogs.":
             cog = "cogs." + cog
         msg = extension(self.client.reload_extension, cog)
-        await output_to_test(msg)
+        await context.send(msg)
 
 
 def extension(func, cog):
@@ -31,7 +29,7 @@ def extension(func, cog):
         return "Extension got no mf setup function"
     except Exception as e:
         return "Unexpected exception:\n" + str(e)
-    return "Extension loaded"
+    return "Extension loaded: "
 
 
 def setup(client):
