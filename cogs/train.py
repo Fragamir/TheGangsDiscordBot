@@ -11,19 +11,16 @@ from urllib.parse import urlencode
 class TrainCog(commands.Cog):
     def __init__(self, client):
         self.client = client
-
-        config = {}
-        with open("SecretStuff.txt", "r") as f:
-            for line in f:
-                config[line.split("::")[0]] = (line.split("::")[1]).replace("\n", "")
-
+        
+        WDSL = "http://lite.realtime.nationalrail.co.uk/OpenLDBWS/wsdl.aspx?ver=2017-10-01"
+        
         self.stations = {}
         with open("station_crs.txt", "r") as f:
             for line in f:
                 self.stations[line.split(":")[0]] = (line.split(":")[1]).replace("\n", "")
 
         history = HistoryPlugin()
-        self.wdsl_client = Client(wsdl=config.get("WDSL"), plugins=[history])
+        self.wdsl_client = Client(wsdl=WDSL, plugins=[history])
         header = xsd.Element('{http://thalesgroup.com/RTTI/2013-11-28/Token/types}AccessToken',
                              xsd.ComplexType([
                                  xsd.Element(
@@ -31,11 +28,10 @@ class TrainCog(commands.Cog):
                                      xsd.String()),
                              ])
                              )
-        self.header_value = header(TokenValue=config.get("NRE_TOKEN"))
-
-        tfl_App_ID = "09a42e56"
-        tfl_App_Key = "2a91b9479b3cb98fc8fb73b173f6dcff"
-        self.tfl_api_token = {"app_id": tfl_App_ID, "app_key": tfl_App_Key}
+        self.header_value = header(TokenValue=os.environ.get("NRE_TOKEN"))
+ 
+        self.tfl_api_token = json.loads(os.environ)
+        
 
         self.line_id = {
             "bakerloo": 0,
