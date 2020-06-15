@@ -9,11 +9,11 @@ class IMBDCog(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.bob_characters = {}
-        with open("bob.txt", "r") as f:
+        with open("static/bob.txt", "r") as f:
             for line in f:
                 self.bob_characters[line.split(":")[0]] = line.split(":")[1]
         self.bob_episodes = {}
-        with open("bob2.txt", "r", encoding="utf-8") as f:
+        with open("static/bob2.txt", "r", encoding="utf-8") as f:
             for line in f:
                 self.bob_episodes[line.split(":")[0]] = [line.split(":")[1],
                                                          line.split(":")[2],
@@ -23,12 +23,12 @@ class IMBDCog(commands.Cog):
     async def imdb(self, context, type, *IMDBQuery):  # The type is 'imdb', the media query is everything after
 
         IMDBqueryplus = "+".join(IMDBQuery)
-        response_raw = urllib.request.urlopen('http://www.omdbapi.com/?apikey=a71b71d0&t=' + IMDBqueryplus + '&plot=full')
+        response_raw = urllib.request.urlopen('http://www.omdbapi.com/?apikey='+ os.environ["OMDB"] +'&t=' + IMDBqueryplus + '&plot=full')
         response = json.loads(response_raw.read())
         if not type.lower() in ["poster", "plot", "synopsis", "actors", "cast", "ratings", "rating", "release", "released"]:
             await context.send("Please use one of the approved queries. Try this one-\n!imdb release moana")
             type = "release"
-            response_raw = urllib.request.urlopen('http://www.omdbapi.com/?apikey=a71b71d0&t=moana&plot=full')
+            response_raw = urllib.request.urlopen('http://www.omdbapi.com/?apikey='+ os.environ["OMDB"] +'&t=moana&plot=full')
             response = json.loads(response_raw.read())
         elif response["Response"] == 'False':
             await context.send("Sorry, that movie or show ain't a thing. Or maybe you cant spell")
