@@ -8,18 +8,6 @@ description = "The Gang's discord bot"
 client = commands.Bot(command_prefix="!", description=description, owner_ids=os.environ["OWNERS"].split(","))
 
 
-async def error(cause, err, item=None):
-    if item:
-        cause = cause + ": " + item
-    msg = f"Failed to {cause}\n*{err}*"
-    await output_to_test(msg)
-
-
-async def output_to_test(msg):
-    channel = client.get_channel(721062998759964682)
-    await channel.send(msg)
-
-
 async def split_send(context, string):
     out = []
     split_string = string.split("\n")
@@ -54,9 +42,9 @@ async def on_ready():
         try:
             client.load_extension(ext)
         except commands.ExtensionFailed as e:
-            await error("load extension", e, ext)
+            await print("Failed to load extension", str(e), ext)
         except Exception as e:
-            await error("do something, unexpected error", e, ext)
+            await print("Failed to do something, unexpected error", str(e), ext)
 
 
 client.run(os.environ.get("SECRET"))
