@@ -4,8 +4,31 @@ from zeep import Client, xsd
 from zeep.plugins import HistoryPlugin
 import json
 import requests
-from main import split_send
 from urllib.parse import urlencode
+
+
+async def split_send(context, string):
+    out = []
+    split_string = string.split("\n")
+    dictionary = {}
+    for count in range(0, len(split_string)-1):
+        dictionary[str(count)] = [split_string[count], len(split_string[count])]
+    start = 0
+    while True:
+        try:
+            interstart = start
+            count = 0
+            while count < 2001:
+                count += dictionary[str(interstart)][1]
+            interstart -= 1
+            msg = ""
+            for count in range(start, interstart):
+                msg += dictionary[str(count)][0]
+            out.append(msg)
+        except IndexError:
+            break
+    for message in out:
+        await context.send(message)
 
 
 class TrainCog(commands.Cog):
