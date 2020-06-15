@@ -15,7 +15,21 @@ class OwnerCog(commands.Cog):
         msg = extension(self.client.reload_extension, cog)
         await context.send(msg)
 
+    @admin.command("load", pass_context=True)
+    async def load(self, cog):
+        if cog[:5] != "cogs.":
+            cog = "cogs." + cog
+        msg = extension(self.client.load_extension, cog)
+        await context.send(msg)
 
+    @admin.command("unload", pass_context=True)
+    async def unload(self, cog):
+        if cog[:5] != "cogs.":
+            cog = "cogs." + cog
+        msg = extension(self.client.unload_extension, cog)
+        await context.send(msg)
+
+        
 def extension(func, cog):
     try:
         func(cog)
